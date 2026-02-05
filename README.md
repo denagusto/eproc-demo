@@ -40,7 +40,7 @@ Buka **Terminal** (Mac/Linux) atau **Command Prompt** (Windows), lalu:
 cd /path/to/demo/folder
 
 # Jalankan aplikasi (1 command aja!)
-docker-compose -f docker-compose.demo.yml up -d
+docker-compose up -d
 ```
 
 **Tunggu 2-3 menit** untuk download images pertama kali (~500-700 MB).
@@ -51,8 +51,8 @@ Buka browser dan akses:
 
 | Aplikasi | URL | Login |
 |----------|-----|-------|
-| **🏢 Admin Portal** | http://localhost:5173 | Email: `admin@eproc.com`<br>Password: `Admin123!` |
-| **👤 Vendor Portal** | http://localhost:5174 | Email: `vendor@example.com`<br>Password: `Vendor123!` |
+| **🏢 Admin Portal** | http://localhost:5173 | Email: `admin@qeraton.com`<br>Password: `admin123` |
+| **👤 Vendor Portal** | http://localhost:5174 | Email: `vendor@test.com`<br>Password: `vendor123` |
 | **🌐 Website** | http://localhost:5175 | (Tidak perlu login) |
 | **🔧 API Docs** | http://localhost:6000/api | (Swagger Documentation) |
 | **📧 Email UI** | http://localhost:8025 | (Cek email masuk di sini) |
@@ -64,18 +64,17 @@ Aplikasi sudah berjalan dan siap untuk demo!
 
 ---
 
-## 📂 5. Import Database (PENTING!)
+## 📂 5. Import Database
 
-Karena database masih kosong, Anda perlu meng-import data demo. 
+**Kabar Gembira!** Database akan otomatis ter-import saat Anda menjalankan `docker-compose up` untuk pertama kalinya (menggunakan file `backup.sql`).
 
-Buka **Terminal** atau **Command Prompt**, lalu jalankan perintah ini (pastikan Anda punya file `.sql`-nya):
+Jika Anda ingin meng-import ulang data secara manual (misal data terhapus), jalankan perintah ini:
 
 ```bash
-# Ganti 'file-anda.sql' dengan nama file SQL yang Anda miliki
-docker exec -i eproc-postgres psql -U eproc -d eproc_demo < file-anda.sql
+docker exec -i eproc-postgres psql -U eproc -d eproc_demo < backup.sql
 ```
 
-Aplikasi siap digunakan dengan data Anda!
+Aplikasi siap digunakan dengan data lengkap!
 
 ---
 
@@ -110,20 +109,20 @@ Aplikasi siap digunakan dengan data Anda!
 
 ```bash
 # Stop aplikasi (data tetap tersimpan)
-docker-compose -f docker-compose.demo.yml stop
+docker-compose stop
 
 # Stop dan hapus containers (data tetap tersimpan)
-docker-compose -f docker-compose.demo.yml down
+docker-compose down
 ```
 
 ## 🔄 Menjalankan Lagi
 
 ```bash
 # Kalau sudah pernah dijalankan sebelumnya
-docker-compose -f docker-compose.demo.yml start
+docker-compose start
 
 # Atau
-docker-compose -f docker-compose.demo.yml up -d
+docker-compose up -d
 ```
 
 ---
@@ -149,33 +148,33 @@ lsof -ti:5173 | xargs kill -9
 
 ```bash
 # Check status
-docker-compose -f docker-compose.demo.yml ps
+docker-compose ps
 
 # Lihat logs
-docker-compose -f docker-compose.demo.yml logs -f
+docker-compose logs -f
 
 # Restart
-docker-compose -f docker-compose.demo.yml restart
+docker-compose restart
 ```
 
 ### Reset Semua (Fresh Start)
 
 ```bash
 # Stop dan hapus semua (termasuk data)
-docker-compose -f docker-compose.demo.yml down -v
+docker-compose down -v
 
 # Jalankan lagi
-docker-compose -f docker-compose.demo.yml up -d
+docker-compose up -d
 ```
 
 ### Update Images (Jika Ada Update)
 
 ```bash
 # Pull images terbaru
-docker-compose -f docker-compose.demo.yml pull
+docker-compose pull
 
 # Restart dengan images baru
-docker-compose -f docker-compose.demo.yml up -d
+docker-compose up -d
 ```
 
 ---
@@ -185,7 +184,7 @@ docker-compose -f docker-compose.demo.yml up -d
 - **RAM**: Minimal 4GB (Recommended 8GB)
 - **Storage**: Minimal 5GB free space
 - **OS**: Windows 10/11, macOS 10.15+, atau Linux
-- **Ports**: 5173, 5174, 5175, 6000, 5432 harus tersedia
+- **Ports**: 5173, 5174, 5175, 6000, 5432, 9000, 9001, 8025 harus tersedia
 
 ---
 
@@ -204,23 +203,23 @@ Jika ada masalah:
 
 1. **Check logs**: 
    ```bash
-   docker-compose -f docker-compose.demo.yml logs -f
+   docker-compose logs -f
    ```
 
 2. **Check status**: 
    ```bash
-   docker-compose -f docker-compose.demo.yml ps
+   docker-compose ps
    ```
 
 3. **Restart semua**: 
    ```bash
-   docker-compose -f docker-compose.demo.yml restart
+   docker-compose restart
    ```
 
 4. **Fresh start**: 
    ```bash
-   docker-compose -f docker-compose.demo.yml down -v
-   docker-compose -f docker-compose.demo.yml up -d
+   docker-compose down -v
+   docker-compose up -d
    ```
 
 ---
@@ -229,27 +228,27 @@ Jika ada masalah:
 
 ```bash
 # Start
-docker-compose -f docker-compose.demo.yml up -d
+docker-compose up -d
 
 # Stop
-docker-compose -f docker-compose.demo.yml stop
+docker-compose stop
 
 # Restart
-docker-compose -f docker-compose.demo.yml restart
+docker-compose restart
 
 # Logs
-docker-compose -f docker-compose.demo.yml logs -f
+docker-compose logs -f
 
 # Status
-docker-compose -f docker-compose.demo.yml ps
+docker-compose ps
 
 # Update
-docker-compose -f docker-compose.demo.yml pull
-docker-compose -f docker-compose.demo.yml up -d
+docker-compose pull
+docker-compose up -d
 
 # Reset
-docker-compose -f docker-compose.demo.yml down -v
-docker-compose -f docker-compose.demo.yml up -d
+docker-compose down -v
+docker-compose up -d
 ```
 
 ---
