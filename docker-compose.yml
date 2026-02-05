@@ -35,9 +35,23 @@ services:
       JWT_EXPIRATION: 7d
       PORT: 6000
       CORS_ORIGIN: http://localhost:5173,http://localhost:5174,http://localhost:5175
+      # Storage (Minio)
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      S3_BUCKET: qat-eproc-demo
+      S3_REGION: us-east-1
+      S3_PUBLIC_URL: http://localhost:9000
+      # Email (Mailhog)
+      EMAIL_NODEMAILER_URL: smtp://mailhog:1025
+      EMAIL_FROM: Merchaint Demo <noreply@eproc-demo.com>
     depends_on:
       postgres:
         condition: service_healthy
+      minio:
+        condition: service_started
+      mailhog:
+        condition: service_started
     restart: unless-stopped
     networks:
       - eproc-network
@@ -46,6 +60,64 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+
+  # Mailhog for Email Testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: eproc-mailhog
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+    networks:
+      - eproc-network
+    restart: unless-stopped
+
+  # Worker (for future async processing)
+  # Di-disable sementara untuk hemat resource, 
+  # karena API sudah ada fallback sync untuk email.
+  # worker:
+  #   image: ${DOCKER_USERNAME}/eproc-worker:demo
+  #   container_name: eproc-worker
+  #   environment:
+  #     NODE_ENV: production
+  #     DATABASE_URL: postgresql://eproc:eproc_demo_2026@postgres:5432/eproc_demo
+  #     S3_ENDPOINT: http://minio:9000
+  #     S3_ACCESS_KEY: minioadmin
+  #     S3_SECRET_KEY: minioadmin
+  #   depends_on:
+  #     - postgres
+  #     - minio
+  #   networks:
+  #     - eproc-network
+  #   restart: unless-stopped
+
+  # Minio Storage
+  minio:
+    image: minio/minio:latest
+    container_name: eproc-minio
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - eproc-network
+    restart: unless-stopped
+
+  # Helper to create bucket
+  createbuckets:
+    image: minio/mc
+    container_name: eproc-minio-init
+    depends_on:
+      - minio
+    networks:
+      - eproc-network
+    entrypoint: >
+      /bin/sh -c " until (/usr/bin/mc config host add myminio http://minio:9000 minioadmin minioadmin) do echo '...waiting for minio...' && sleep 1; done; /usr/bin/mc mb myminio/qat-eproc-demo; /usr/bin/mc anonymous set public myminio/qat-eproc-demo; exit 0; "
 
   # Admin Portal
   admin:
@@ -91,6 +163,8 @@ services:
 
 volumes:
   postgres_data:
+    driver: local
+  minio_data:
     driver: local
 
 networks:

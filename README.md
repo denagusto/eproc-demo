@@ -55,6 +55,8 @@ Buka browser dan akses:
 | **👤 Vendor Portal** | http://localhost:5174 | Email: `vendor@example.com`<br>Password: `Vendor123!` |
 | **🌐 Website** | http://localhost:5175 | (Tidak perlu login) |
 | **🔧 API Docs** | http://localhost:6000/api | (Swagger Documentation) |
+| **📧 Email UI** | http://localhost:8025 | (Cek email masuk di sini) |
+| **📦 Storage UI** | http://localhost:9001 | User: `minioadmin` / Pass: `minioadmin` |
 
 ### 4. Selesai! 🎉
 
