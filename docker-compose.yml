@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database with auto-initialization
+  postgres:
+    image: postgres:15-alpine
+    container_name: eproc-postgres
+    environment:
+      POSTGRES_DB: eproc_demo
+      POSTGRES_USER: eproc
+      POSTGRES_PASSWORD: eproc_demo_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U eproc" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eproc-network
+
+  # Backend API
+  api:
+    image: ${DOCKER_USERNAME}/eproc-api:demo
+    container_name: eproc-api
+    ports:
+      - "6000:6000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://eproc:eproc_demo_2026@postgres:5432/eproc_demo
+      JWT_SECRET: eproc_demo_jwt_secret_2026_change_in_production
+      JWT_EXPIRATION: 7d
+      PORT: 6000
+      CORS_ORIGIN: http://localhost:5173,http://localhost:5174,http://localhost:5175
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - eproc-network
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:6000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Admin Portal
+  admin:
+    image: ${DOCKER_USERNAME}/eproc-admin:demo
+    container_name: eproc-admin
+    ports:
+      - "5173:80"
+    environment:
+      VITE_API_URL: http://localhost:6000
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - eproc-network
+
+  # Vendor Portal (App)
+  vendor:
+    image: ${DOCKER_USERNAME}/eproc-vendor:demo
+    container_name: eproc-vendor
+    ports:
+      - "5174:80"
+    environment:
+      VITE_API_URL: http://localhost:6000
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - eproc-network
+
+  # Marketing Website
+  web:
+    image: ${DOCKER_USERNAME}/eproc-web:demo
+    container_name: eproc-web
+    ports:
+      - "5175:80"
+    environment:
+      VITE_API_URL: http://localhost:6000
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - eproc-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  eproc-network:
+    driver: bridge
