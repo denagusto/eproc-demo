@@ -65,17 +65,30 @@ Aplikasi sudah berjalan dan siap untuk demo!
 
 ---
 
-## 📂 5. Import Database
+## 📂 Database Otomatis
 
-**Kabar Gembira!** Database akan otomatis ter-import saat Anda menjalankan `docker-compose up` untuk pertama kalinya (menggunakan file `backup.sql`).
+**Kabar Gembira!** Database akan **otomatis ter-import** saat pertama kali menjalankan `docker-compose up` menggunakan file `init-db.sql`.
 
-Jika Anda ingin meng-import ulang data secara manual (misal data terhapus), jalankan perintah ini:
+File ini berisi:
+- ✅ Semua tabel dan struktur database
+- ✅ Data demo lengkap (users, vendors, POs, dll)
+- ✅ Cost centers untuk semua departments
+- ✅ Approval workflows yang sudah dikonfigurasi
+- ✅ Sample purchase requests dan goods receipts
+
+**Tidak perlu import manual!** Semuanya sudah otomatis.
+
+### Reset Database (Fresh Start)
+
+Jika ingin mulai dari awal dengan data bersih:
 
 ```bash
-docker exec -i eproc-postgres psql -U eproc -d eproc_demo < backup.sql
-```
+# Stop dan hapus semua termasuk data
+docker-compose down -v
 
-Aplikasi siap digunakan dengan data lengkap!
+# Start lagi - database akan otomatis ter-restore dari init-db.sql
+docker-compose up -d
+```
 
 ---
 
