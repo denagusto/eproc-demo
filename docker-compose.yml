@@ -1,16 +1,16 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database with auto-initialization
+  # PostgreSQL Database with pgvector (Required for backup.sql)
   postgres:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg16
     container_name: eproc-postgres
     environment:
       POSTGRES_DB: eproc_demo
       POSTGRES_USER: eproc
       POSTGRES_PASSWORD: eproc_demo_2026
     ports:
-      - "5432:5432"
+      - "5440:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql:ro
@@ -27,21 +27,21 @@ services:
     image: ${DOCKER_USERNAME}/eproc-api:demo
     container_name: eproc-api
     ports:
-      - "6000:6000"
+      - "6060:6000"
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://eproc:eproc_demo_2026@postgres:5432/eproc_demo
       JWT_SECRET: eproc_demo_jwt_secret_2026_change_in_production
       JWT_EXPIRATION: 7d
       PORT: 6000
-      CORS_ORIGIN: http://localhost:5173,http://localhost:5174,http://localhost:5175
+      CORS_ORIGIN: http://localhost:5183,http://localhost:5184,http://localhost:5185
       # Storage (Minio)
       S3_ENDPOINT: http://minio:9000
       S3_ACCESS_KEY: minioadmin
       S3_SECRET_KEY: minioadmin
       S3_BUCKET: qat-eproc-demo
       S3_REGION: us-east-1
-      S3_PUBLIC_URL: http://localhost:9000
+      S3_PUBLIC_URL: http://localhost:9040
       # Email (Mailhog)
       EMAIL_NODEMAILER_URL: smtp://mailhog:1025
       EMAIL_FROM: Merchaint Demo <noreply@eproc-demo.com>
@@ -66,8 +66,8 @@ services:
     image: mailhog/mailhog:latest
     container_name: eproc-mailhog
     ports:
-      - "1025:1025" # SMTP
-      - "8025:8025" # Web UI
+      - "1045:1025" # SMTP (External changed to avoid conflict)
+      - "8045:8025" # Web UI (External changed to avoid conflict)
     networks:
       - eproc-network
     restart: unless-stopped
@@ -96,8 +96,8 @@ services:
     image: minio/minio:latest
     container_name: eproc-minio
     ports:
-      - "9000:9000" # API
-      - "9001:9001" # Console
+      - "9040:9000" # API
+      - "9041:9001" # Console
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
@@ -124,9 +124,9 @@ services:
     image: ${DOCKER_USERNAME}/eproc-admin:demo
     container_name: eproc-admin
     ports:
-      - "5173:80"
+      - "5183:80"
     environment:
-      VITE_API_URL: http://localhost:6000
+      VITE_API_URL: http://localhost:6060
     depends_on:
       - api
     restart: unless-stopped
@@ -138,9 +138,9 @@ services:
     image: ${DOCKER_USERNAME}/eproc-vendor:demo
     container_name: eproc-vendor
     ports:
-      - "5174:80"
+      - "5184:80"
     environment:
-      VITE_API_URL: http://localhost:6000
+      VITE_API_URL: http://localhost:6060
     depends_on:
       - api
     restart: unless-stopped
@@ -152,9 +152,9 @@ services:
     image: ${DOCKER_USERNAME}/eproc-web:demo
     container_name: eproc-web
     ports:
-      - "5175:80"
+      - "5185:80"
     environment:
-      VITE_API_URL: http://localhost:6000
+      VITE_API_URL: http://localhost:6060
     depends_on:
       - api
     restart: unless-stopped

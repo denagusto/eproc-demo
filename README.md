@@ -51,12 +51,12 @@ Buka browser dan akses:
 
 | Aplikasi | URL | Login |
 |----------|-----|-------|
-| **🏢 Admin Portal** | http://localhost:5173 | Email: `admin@qeraton.com`<br>Password: `admin123` |
-| **👤 Vendor Portal** | http://localhost:5174 | Email: `vendor@test.com`<br>Password: `vendor123` |
-| **🌐 Website** | http://localhost:5175 | (Tidak perlu login) |
-| **🔧 API Docs** | http://localhost:6000/api | (Swagger Documentation) |
-| **📧 Email UI** | http://localhost:8025 | (Cek email masuk di sini) |
-| **📦 Storage UI** | http://localhost:9001 | User: `minioadmin` / Pass: `minioadmin` |
+| **🏢 Admin Portal** | http://localhost:5183 | Email: `admin@qeraton.com`<br>Password: `admin123` |
+| **👤 Vendor Portal** | http://localhost:5184 | Email: `vendor@test.com`<br>Password: `vendor123` |
+| **🌐 Website** | http://localhost:5185 | (Tidak perlu login) |
+| **🔧 API Docs** | http://localhost:6060/api | (Swagger Documentation) |
+| **📧 Email UI** | http://localhost:8045 | (Cek email masuk di sini) |
+| **📦 Storage UI** | http://localhost:9041 | User: `minioadmin` / Pass: `minioadmin` |
 
 ### 4. Selesai! 🎉
 
@@ -81,10 +81,10 @@ Aplikasi siap digunakan dengan data lengkap!
 ## 🎬 Demo Flow
 
 ### Skenario 1: Vendor Registration
-1. Buka **Vendor Portal** (http://localhost:5174)
+1. Buka **Vendor Portal** (http://localhost:5184)
 2. Click "Register as Vendor"
 3. Isi form registrasi
-4. Buka **Admin Portal** (http://localhost:5173)
+4. Buka **Admin Portal** (http://localhost:5183)
 5. Login sebagai admin
 6. Approve vendor yang baru daftar
 
@@ -135,13 +135,13 @@ Jika ada error "port already in use":
 
 **Windows:**
 ```cmd
-netstat -ano | findstr :5173
+netstat -ano | findstr :5183
 taskkill /PID <PID> /F
 ```
 
 **Mac/Linux:**
 ```bash
-lsof -ti:5173 | xargs kill -9
+lsof -ti:5183 | xargs kill -9
 ```
 
 ### Aplikasi Tidak Bisa Diakses
@@ -184,7 +184,7 @@ docker-compose up -d
 - **RAM**: Minimal 4GB (Recommended 8GB)
 - **Storage**: Minimal 5GB free space
 - **OS**: Windows 10/11, macOS 10.15+, atau Linux
-- **Ports**: 5173, 5174, 5175, 6000, 5432, 9000, 9001, 8025 harus tersedia
+- **Ports**: 5183, 5184, 5185, 6060, 5440, 9040, 9041, 8045 harus tersedia
 
 ---
 
