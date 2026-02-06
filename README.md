@@ -67,14 +67,16 @@ Aplikasi sudah berjalan dan siap untuk demo!
 
 ## 📂 Database Otomatis
 
-**Kabar Gembira!** Database akan **otomatis ter-import** saat pertama kali menjalankan `docker-compose up` menggunakan file `init-db.sql`.
+**Kabar Gembira!** Database akan **otomatis ter-import** saat pertama kali menjalankan `docker-compose up` menggunakan file `backup-20260206-160056.sql`.
 
-File ini berisi:
+File backup terbaru berisi:
 - ✅ Semua tabel dan struktur database
 - ✅ Data demo lengkap (users, vendors, POs, dll)
 - ✅ Cost centers untuk semua departments
 - ✅ Approval workflows yang sudah dikonfigurasi
 - ✅ Sample purchase requests dan goods receipts
+- ✅ Admin bisa approve semua PR
+- ✅ Goods receipt dengan data lengkap
 
 **Tidak perlu import manual!** Semuanya sudah otomatis.
 
@@ -86,7 +88,7 @@ Jika ingin mulai dari awal dengan data bersih:
 # Stop dan hapus semua termasuk data
 docker-compose down -v
 
-# Start lagi - database akan otomatis ter-restore dari init-db.sql
+# Start lagi - database akan otomatis ter-restore dari backup terbaru
 docker-compose up -d
 ```
 
