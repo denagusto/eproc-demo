@@ -20,6 +20,12 @@ if [ "$TABLE_COUNT" -eq "0" ]; then
 
     echo "✅ Database restore completed successfully!"
     echo "📊 Tables created: $(psql -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';")"
+
+    echo "🔧 Applying post-restore fixes..."
+    if [ -f /fix-approval-workflows.sql ]; then
+        psql < /fix-approval-workflows.sql
+        echo "✅ Approval workflows fixed"
+    fi
 else
     echo "✅ Database already has $TABLE_COUNT tables. Skipping restore."
 fi

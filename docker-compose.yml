@@ -28,6 +28,7 @@ services:
     volumes:
       - ./backup-20260206-160056.sql:/backup.sql:ro
       - ./check-and-restore.sh:/check-and-restore.sh:ro
+      - ./fix-approval-workflows.sql:/fix-approval-workflows.sql:ro
     environment:
       PGHOST: postgres
       PGPORT: 5432
