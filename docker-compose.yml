@@ -45,8 +45,12 @@ services:
       # Email (Mailhog)
       EMAIL_NODEMAILER_URL: smtp://mailhog:1025
       EMAIL_FROM: Merchaint Demo <noreply@eproc-demo.com>
+      # RabbitMQ
+      RABBITMQ_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672/eproc_vhost
     depends_on:
       postgres:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
       minio:
         condition: service_started
@@ -60,6 +64,26 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+
+  # RabbitMQ for Message Queue
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: eproc-rabbitmq
+    ports:
+      - "5682:5672" # AMQP (Avoid conflict)
+      - "15682:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+      RABBITMQ_DEFAULT_VHOST: eproc_vhost
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eproc-network
+    restart: unless-stopped
 
   # Mailhog for Email Testing
   mailhog:

@@ -57,6 +57,7 @@ Buka browser dan akses:
 | **🔧 API Docs** | http://localhost:6060/api | (Swagger Documentation) |
 | **📧 Email UI** | http://localhost:8045 | (Cek email masuk di sini) |
 | **📦 Storage UI** | http://localhost:9041 | User: `minioadmin` / Pass: `minioadmin` |
+| **🐰 Message Queue** | http://localhost:15682 | User: `guest` / Pass: `guest` |
 
 ### 4. Selesai! 🎉
 
@@ -184,7 +185,7 @@ docker-compose up -d
 - **RAM**: Minimal 4GB (Recommended 8GB)
 - **Storage**: Minimal 5GB free space
 - **OS**: Windows 10/11, macOS 10.15+, atau Linux
-- **Ports**: 5183, 5184, 5185, 6060, 5440, 9040, 9041, 8045 harus tersedia
+- **Ports**: 5183, 5184, 5185, 6060, 5440, 9040, 9041, 8045, 5682, 15682 harus tersedia
 
 ---
 
