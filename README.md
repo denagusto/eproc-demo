@@ -52,7 +52,7 @@ Buka browser dan akses:
 | Aplikasi | URL | Login |
 |----------|-----|-------|
 | **🏢 Admin Portal** | http://localhost:5183 | Email: `admin@qeraton.com`<br>Password: `admin123` |
-| **👤 Vendor Portal** | http://localhost:5184 | Email: `vendor@test.com`<br>Password: `vendor123` |
+| **👤 Vendor Portal** | http://localhost:5184 | Email: `vendor@test.com`<br>Password: `password123` |
 | **🌐 Website** | http://localhost:5185 | (Tidak perlu login) |
 | **🔧 API Docs** | http://localhost:6060/api | (Swagger Documentation) |
 | **📧 Email UI** | http://localhost:8045 | (Cek email masuk di sini) |
